@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor</title>
+<style>
+    body {
+        background-color: black;
+        color: blue;
+        font-family: Courier, monospace;
+        margin: 0;
+        padding: 0;
+    }
+    textarea {
+        width: 100%;
+        height: 70vh;
+        border: none;
+        outline: none;
+        background-color: black;
+        color: green;
+        font-family: Courier, monospace;
+        font-size: 16px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    /* Estilos para la ventana emergente */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        overflow: auto;
+    }
+    .modal-content {
+        background-color: black;
+        color: red;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid blue;
+        width: 80%;
+        max-width: 600px;
+        text-align: left;
+    }
+    .close {
+        color: blue;
+        float: right;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<textarea id="editor" placeholder="Escribe aquí..."></textarea>
+
+<button onclick="downloadText()">TXT</button>
+<button onclick="downloadXML()">XML</button>
+<button onclick="downloadHTML()">HTML</button>
+<button onclick="openModal()">Ver</button>
+<input type="color" id="colorPicker" onchange="changeTextColor(this.value)">
+<button onclick="resetTextColor()">Restaurar color</button>
+
+<!-- Ventana emergente -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <pre id="modalText"></pre>
+  </div>
+</div>
+
+<script>
+    function downloadText() {
+        const text = document.getElementById('editor').value;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'texto.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function downloadXML() {
+        const text = document.getElementById('editor').value;
+        const blob = new Blob([text], { type: 'application/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'texto.xml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function downloadHTML() {
+        const text = document.getElementById('editor').value;
+        const blob = new Blob(['<!DOCTYPE html><html><head><title>Texto HTML</title></head><body><pre>' + text + '</pre></body></html>'], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'texto.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function openModal() {
+        const text = document.getElementById('editor').value;
+        const modal = document.getElementById('myModal');
+        const modalText = document.getElementById('modalText');
+        modalText.innerText = text;
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    }
+
+    function changeTextColor(color) {
+        const editor = document.getElementById('editor');
+        editor.style.color = color;
+    }
+
+    function resetTextColor() {
+        const editor = document.getElementById('editor');
+        editor.style.color = 'blue'; // Cambiar al color original
+    }
+</script>
+
+</body>
+</html>
